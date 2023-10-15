@@ -17,7 +17,8 @@ public class ReadStudent : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.Get("https://com-tech-xr-php.azurewebsites.net/read-students.php"))
         {
-            yield return www.SendWebRequest();
+            yield
+            return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -31,16 +32,15 @@ public class ReadStudent : MonoBehaviour
                 Debug.Log("After");
                 Debug.Log(www.downloadHandler.text);
 
-
                 // TODO: formatting
-                
-/*                foreach (StudentData entry in array.items)
-                {
-                    Debug.Log("First name:" + entry.FirstName);
-                    Debug.Log("Last name:" + entry.LastName);
-                    Debug.Log("SID:" + entry.SID);
-                }
-*/
+
+                /*                foreach (StudentData entry in array.items)
+                        {
+                            Debug.Log("First name:" + entry.FirstName);
+                            Debug.Log("Last name:" + entry.LastName);
+                            Debug.Log("SID:" + entry.SID);
+                        }
+        */
                 // Debug.Log("Attempt:" + boardData.Attempt.DrHemo_attemptAID);
             }
         }

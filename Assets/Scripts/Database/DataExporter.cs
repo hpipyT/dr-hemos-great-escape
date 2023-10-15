@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PuzzleAnswer{
-    
-
+public class PuzzleAnswer
+{
 
     public string answer;
     public string SID;
@@ -21,15 +20,15 @@ public class PuzzleAnswer{
     public PuzzleAnswer(string answer)
     {
         this.answer = answer;
-/*        this.SID = student.SID;
-        this.PUZid = student.PUZid;*/
+        /*        this.SID = student.SID;
+            this.PUZid = student.PUZid;*/
 
     }
 
     public List<PuzzleAnswer> AllStepAnswers(PuzzleStep step)
     {
         List<PuzzleAnswer> allAnswers = new List<PuzzleAnswer>();
-        for(int i = 0; i < step.incorrectAnswers.Count; i++)
+        for (int i = 0; i < step.incorrectAnswers.Count; i++)
         {
             allAnswers.Add(new PuzzleAnswer(step.incorrectAnswers[i], step.stepNo.ToString(), step.parentPuzzle.idNo.ToString()));
         }
@@ -39,7 +38,8 @@ public class PuzzleAnswer{
 
 }
 
-public class PuzzleStepData{
+public class PuzzleStepData
+{
     public string hintsTaken;
     public float runningTime;
     public bool isComplete;
@@ -55,16 +55,15 @@ public class PuzzleStepData{
         this.PUZid = student.PUZid;
         roomName = step.parentPuzzle.room;
 
-
         /*        // if step is last step, value is cycled to -100. set it to last step's actual val
-                if(step.stepNo < 0)
-                {
-                    stepNo = step.parentPuzzle.puzzleSteps.Length;
-                }
-                else
-                {
-                    stepNo = step.stepNo;
-                }*/
+                    if(step.stepNo < 0)
+                    {
+                        stepNo = step.parentPuzzle.puzzleSteps.Length;
+                    }
+                    else
+                    {
+                        stepNo = step.stepNo;
+                    }*/
         stepNo = step.stepNo;
 
         hintsTaken = GetHintTakenCount(step.hints).ToString();
@@ -78,20 +77,19 @@ public class PuzzleStepData{
 
     int GetHintTakenCount(Hint[] hints)
     {
-        int hintsTaken =0;
-        for(int i = 0; i < hints.Length; i++)
+        int hintsTaken = 0;
+        for (int i = 0; i < hints.Length; i++)
         {
-            if(hints[i].hintTaken)
-                hintsTaken++;
+            if (hints[i].hintTaken) hintsTaken++;
         }
 
         return hintsTaken;
     }
 
-
 }
 
-public class PuzzleAttemptData{
+public class PuzzleAttemptData
+{
     string roomName;
     int puzzleID;
     bool isComplete;
@@ -126,7 +124,8 @@ public class EscapeData
     }
 }
 
-public class FormattedData{
+public class FormattedData
+{
 
     float TotalTime;
 
@@ -134,12 +133,10 @@ public class FormattedData{
     bool isCompleted;
     int puzzleID;
 
-
     List<int> hintsTaken;
 
-
     int stepID;
-    List <string> answers;
+    List<string> answers;
     public FormattedData(Puzzle puzzleData)
     {
         TimeSpent = puzzleData.completionTime;
@@ -150,20 +147,20 @@ public class FormattedData{
 
     public void GetDataFromSteps(Puzzle puzzleData)
     {
-        for(int i = 0; i < puzzleData.puzzleSteps.Length; i++)
+        for (int i = 0; i < puzzleData.puzzleSteps.Length; i++)
         {
-            if(puzzleData.puzzleSteps[i].stepNo < 0)
+            if (puzzleData.puzzleSteps[i].stepNo < 0)
             {
                 continue;
             }
             answers.AddRange(GetAnswersGiven(puzzleData.puzzleSteps[i]));
         }
     }
-    
+
     public List<string> GetAnswersGiven(PuzzleStep step)
     {
         List<string> answersGiven = new List<string>();
-        for(int i = 0; i < step.incorrectAnswers.Count; i++)
+        for (int i = 0; i < step.incorrectAnswers.Count; i++)
         {
             answersGiven.Add(step.incorrectAnswers[i]);
         }
@@ -171,12 +168,10 @@ public class FormattedData{
         return null;
     }
 
-    
-
     public List<string> GetHintsTaken(Puzzle puzzleData)
     {
         List<string> hintsTaken = new List<string>();
-        for(int i = 0; i < puzzleData.puzzleSteps.Length; i++)
+        for (int i = 0; i < puzzleData.puzzleSteps.Length; i++)
         {
 
         }
@@ -200,20 +195,20 @@ public class DataExporter : MonoBehaviour
     public GameState gameState;
     public UnityEvent importantGameUpdate;
     // Start is called before the first frame update
-    
+
     void Awake()
     {
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
             DontDestroyOnLoad(this);
-        } 
+        }
     }
-    
+
     void Start()
     {
         db = GameObject.Find("DBAccess");
@@ -230,11 +225,11 @@ public class DataExporter : MonoBehaviour
     }
 
     public List<PuzzleStepData> GetAllPuzzleStepData()
-    {  
+    {
         List<PuzzleStepData> allData = new List<PuzzleStepData>();
-        for(int i = 0; i < gameState.AllPuzzles.Count; i++)
+        for (int i = 0; i < gameState.AllPuzzles.Count; i++)
         {
-            for(int j = 0; j < gameState.AllPuzzles[i].puzzleSteps.Length; j++)
+            for (int j = 0; j < gameState.AllPuzzles[i].puzzleSteps.Length; j++)
             {
                 allData.Add(new PuzzleStepData(gameState.AllPuzzles[i].puzzleSteps[i]));
             }
@@ -245,9 +240,9 @@ public class DataExporter : MonoBehaviour
     public List<PuzzleAttemptData> GetAllPuzzleData()
     {
         List<PuzzleAttemptData> allData = new List<PuzzleAttemptData>();
-        for(int i = 0; i < gameState.AllPuzzles.Count; i++)
+        for (int i = 0; i < gameState.AllPuzzles.Count; i++)
         {
-                allData.Add(new PuzzleAttemptData(gameState.AllPuzzles[i]));
+            allData.Add(new PuzzleAttemptData(gameState.AllPuzzles[i]));
         }
         return allData;
     }
@@ -271,8 +266,6 @@ public class DataExporter : MonoBehaviour
         return new PuzzleAnswer(answer, student.PUZid, student.SID);
     }
 
-
-
     public FormattedData GetDataForExport()
     {
         return null;
@@ -281,6 +274,6 @@ public class DataExporter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

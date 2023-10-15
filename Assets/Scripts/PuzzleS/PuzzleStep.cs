@@ -45,26 +45,23 @@ public class PuzzleStep : MonoBehaviourPun
     public GameObject db;
     public DataExporter exporter;
 
-    
-
     // Object Collision
     public void objectiveComplete()
     {
-        
-        if(GameState.Instance.OfflineMode)
+
+        if (GameState.Instance.OfflineMode)
         {
-        realObjectiveComplete();
+            realObjectiveComplete();
         }
         else
         {
-        photonView.RPC("realObjectiveComplete", RpcTarget.All);
+            photonView.RPC("realObjectiveComplete", RpcTarget.All);
         }
     }
 
     [PunRPC]
     public void realObjectiveComplete()
     {
-        
 
         if (isHint)
         {
@@ -77,7 +74,6 @@ public class PuzzleStep : MonoBehaviourPun
             bool dbEnabled = GameState.Instance.dbActive;
             GameObject db = GameObject.Find("DBAccess");
 
-            
             if (dbEnabled && stepNo != GameState.Instance.ActivePuzzle.puzzleSteps.Length && stepNo > 0)
             {
                 try
@@ -96,11 +92,11 @@ public class PuzzleStep : MonoBehaviourPun
 
             }
 
-            if(GameState.Instance.ActivePuzzle.currentPuzzleStep == this)
+            if (GameState.Instance.ActivePuzzle.currentPuzzleStep == this)
             {
                 parentPuzzle.puzzleBaseReference.CorrectSound();
                 GameState.Instance.ActivePuzzle.nextStep();
-                if(incorrect != null)
+                if (incorrect != null)
                 {
                     incorrect.Disappear();
                 }
@@ -109,43 +105,29 @@ public class PuzzleStep : MonoBehaviourPun
             // calls Puzzle.nextStep()
         }
 
-
-
-
     }
     public void SolutionComplete()
     {
-        if(incorrect != null)
+        if (incorrect != null)
         {
             incorrect.Disappear();
         }
 
         realObjectiveComplete();
-
-        /*
-        if(GameState.Instance.OfflineMode)
-        {
-        realObjectiveComplete();
-        }
-        else
-        {
-        photonView.RPC("realObjectiveComplete", RpcTarget.All);
-        }*/
     }
 
     string prevAns = "";
 
-
     [PunRPC]
     public void IncorrectAnswer(string answerGiven, float timePen)
     {
-        if(answerGiven == "" || answerGiven == prevAns)
+        if (answerGiven == "" || answerGiven == prevAns)
         {
             return;
         }
         incorrectAnswers.Add(answerGiven);
         prevAns = answerGiven;
-        if(incorrect != null)
+        if (incorrect != null)
         {
             incorrect.Appear();
         }
@@ -158,20 +140,20 @@ public class PuzzleStep : MonoBehaviourPun
     {
         string aAgain = a.Trim().Normalize();
         string bAgain = b.Trim().Normalize();
-        
+
         char[] aAgainAgain = aAgain.ToCharArray();
         char[] bAgainAgain = bAgain.ToCharArray();
 
         Debug.Log("Comparing " + aAgainAgain.ToString() + " and " + bAgainAgain.ToString() + "\nOf lengths: " + aAgainAgain.Length + " and " + bAgainAgain.Length);
-        if(a == b || a.Trim() == b.Trim() || a.Equals(b) || String.Compare(a, b) == 0 || String.Compare(a.Trim(), b.Trim()) == 0)
+        if (a == b || a.Trim() == b.Trim() || a.Equals(b) || String.Compare(a, b) == 0 || String.Compare(a.Trim(), b.Trim()) == 0)
         {
             return true;
         }
-        else if(aAgain == bAgain || aAgain.Trim() == bAgain.Trim() || aAgain.Equals(bAgain) || String.Compare(aAgain, bAgain) == 0)
-{
+        else if (aAgain == bAgain || aAgain.Trim() == bAgain.Trim() || aAgain.Equals(bAgain) || String.Compare(aAgain, bAgain) == 0)
+        {
             return true;
         }
-        else if(aAgainAgain == bAgainAgain)
+        else if (aAgainAgain == bAgainAgain)
         {
             return true;
         }
@@ -187,7 +169,7 @@ public class PuzzleStep : MonoBehaviourPun
 
     public void solutionAttempt(string answerGiven)
     {
-        if(GameState.Instance.OfflineMode)
+        if (GameState.Instance.OfflineMode)
         {
             solutionAttemptHelper(answerGiven);
         }
@@ -200,7 +182,8 @@ public class PuzzleStep : MonoBehaviourPun
 
     public IEnumerator WaitForVerifySolution(string answerGiven)
     {
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield
+        return new WaitForSecondsRealtime(1.5f);
 
         // database
         dbEnabled = GameState.Instance.dbActive;
@@ -232,26 +215,25 @@ public class PuzzleStep : MonoBehaviourPun
             }
 
         }
-        yield return null;
+        yield
+        return null;
     }
 
     [PunRPC]
     public bool solutionAttemptHelper(string answerGiven)
     {
         Debug.Log("Attempting solution " + answerGiven);
-        if(answerGiven.Length > 1)
-            answerGiven = answerGiven.Substring(0, answerGiven.Length-1);
+        if (answerGiven.Length > 1) answerGiven = answerGiven.Substring(0, answerGiven.Length - 1);
         answerGiven = answerGiven.Normalize();
-        
-        if (!isActive)
-            return false;
+
+        if (!isActive) return false;
 
         switch (answerType)
         {
             case AnswerType.MultipleChoice:
-                if(answerGiven.ToLower() == solutionSet[0].ToLower())
+                if (answerGiven.ToLower() == solutionSet[0].ToLower())
                 {
-                    Debug.Log("Trying solution: " + answerGiven + "\nFor question: " + this.question +"\nIntended answer: " + solutionSet[0]);
+                    Debug.Log("Trying solution: " + answerGiven + "\nFor question: " + this.question + "\nIntended answer: " + solutionSet[0]);
                     Debug.Log("Correct choice!");
                     SolutionComplete();
                     return true;
@@ -260,7 +242,7 @@ public class PuzzleStep : MonoBehaviourPun
             case AnswerType.FillInBlank:
                 foreach (string solution in solutionSet)
                 {
-                    Debug.Log("Trying solution: " + answerGiven + "\nFor question: " + this.question +"\nIntended answer: " + solution);
+                    Debug.Log("Trying solution: " + answerGiven + "\nFor question: " + this.question + "\nIntended answer: " + solution);
                     if (solution.ToLower() == answerGiven.ToLower())
                     {
                         Debug.Log("Correct solution!");
@@ -269,9 +251,9 @@ public class PuzzleStep : MonoBehaviourPun
                     }
                     else
                     {
-                        Debug.Log("Incorrect solution..." );
+                        Debug.Log("Incorrect solution...");
                         wrongAnswer = true;
-                        
+
                     }
                 }
                 break;
@@ -281,9 +263,9 @@ public class PuzzleStep : MonoBehaviourPun
             default:
                 break;
         }
-        
-            IncorrectAnswer(answerGiven, timePenalty);
-        
+
+        IncorrectAnswer(answerGiven, timePenalty);
+
         return false;
     }
 
@@ -292,14 +274,13 @@ public class PuzzleStep : MonoBehaviourPun
         return this.gameObject.GetComponentsInChildren<Hint>();
     }
 
-
     [PunRPC]
     public void activate()
     {
         bool dbEnabled = GameState.Instance.dbActive;
         GameObject db = GameObject.Find("DBAccess");
-        
-        if(incorrect != null)
+
+        if (incorrect != null)
         {
             incorrect.Disappear();
         }
@@ -317,11 +298,10 @@ public class PuzzleStep : MonoBehaviourPun
             catch (Exception e)
             {
                 Debug.Log(e);
-                Debug.Log("Failed to create data exporter");                
+                Debug.Log("Failed to create data exporter");
             }
             // create PuzzleStep in database 
         }
-
 
         if (hints == null)
         {
@@ -330,29 +310,27 @@ public class PuzzleStep : MonoBehaviourPun
         runningTime = 0;
         incorrectAnswers = new List<string>();
         isActive = true;
-        if(targetObjects != null)
+        if (targetObjects != null)
         {
-            foreach(PuzzleObject puzzleObject in targetObjects)
+            foreach (PuzzleObject puzzleObject in targetObjects)
             {
-                if(puzzleObject != null)
+                if (puzzleObject != null)
                 {
                     puzzleObject.ActivateObject();
                 }
             }
         }
-        for(int i = 0; i < hints.Length; i++)
+        for (int i = 0; i < hints.Length; i++)
         {
             hints[i].hintNo = i;
         }
-
-        
 
     }
 
     public void AddPuzzleObject(PuzzleObject addedObj)
     {
         PuzzleObject[] newList = new PuzzleObject[targetObjects.Length + 1];
-        for(int i = 0; i < targetObjects.Length; i++)
+        for (int i = 0; i < targetObjects.Length; i++)
         {
             newList[i] = targetObjects[i];
         }
@@ -364,15 +342,15 @@ public class PuzzleStep : MonoBehaviourPun
     public void deactivate()
     {
         isActive = false;
-        for(int i = 0; i < hints.Length; i++)
+        for (int i = 0; i < hints.Length; i++)
         {
-            if(hints[i].hintTaken && hints[i].hintActive)
+            if (hints[i].hintTaken && hints[i].hintActive)
             {
                 hints[i].DeactivateHint();
             }
         }
 
-        for(int i = 0; i < targetObjects.Length; i++)
+        for (int i = 0; i < targetObjects.Length; i++)
         {
             targetObjects[i].DeactivateObject();
         }
@@ -386,7 +364,9 @@ public class PuzzleStep : MonoBehaviourPun
         this.hints = null;
         this.isHint = false;
         this.isActive = false;
-        this.solutionSet = new string[1]{solution};
+        this.solutionSet = new string[1] {
+      solution
+    };
     }
 
     public PuzzleStep(string question, PuzzleObject[] solutionObj)
@@ -413,32 +393,31 @@ public class PuzzleStep : MonoBehaviourPun
         Debug.Log("trying to trigger " + paramName + " for " + objName);
         List<Animator> anims = this.gameObject.GetComponentsInChildren<Animator>().ToList();
         Debug.Log("there are " + anims.Count + " anims to find");
-        for(int i = 0; i < anims.Count; i++)
+        for (int i = 0; i < anims.Count; i++)
         {
-            if(anims[i] == null)
+            if (anims[i] == null)
             {
                 continue;
             }
-            if(anims[i].gameObject.name == objName)
+            if (anims[i].gameObject.name == objName)
             {
                 anim = anims[i];
                 anim.SetBool(paramName, true);
             }
         }
 
-
-        if(anim == null)
+        if (anim == null)
         {
-            for(int i = 0; i<targetObjects.Length; i++)
+            for (int i = 0; i < targetObjects.Length; i++)
             {
-                if(targetObjects[i] == null)
+                if (targetObjects[i] == null)
                 {
                     continue;
                 }
-                if(targetObjects[i].name == objName)
+                if (targetObjects[i].name == objName)
                 {
                     anim = targetObjects[i].GetComponentInChildren<Animator>();
-                    if(anim != null)
+                    if (anim != null)
                     {
                         anim.SetBool(paramName, true);
                         Debug.Log(anim);
@@ -454,14 +433,14 @@ public class PuzzleStep : MonoBehaviourPun
             {
                 for (int j = 0; j < hints[i].puzObjs.Count; j++)
                 {
-                    if(hints[i].puzObjs.ElementAt(j)== null)
+                    if (hints[i].puzObjs.ElementAt(j) == null)
                     {
                         continue;
                     }
-                    if(hints[i].puzObjs.ElementAt(j).name == objName)
+                    if (hints[i].puzObjs.ElementAt(j).name == objName)
                     {
                         anim = hints[i].puzObjs.ElementAt(j).GetComponentInChildren<Animator>();
-                        if(anim != null)
+                        if (anim != null)
                         {
                             anim.SetBool(paramName, true);
                             Debug.Log(anim);
@@ -475,7 +454,7 @@ public class PuzzleStep : MonoBehaviourPun
             }
         }
 
-        if(anim != null)
+        if (anim != null)
         {
             Debug.Log("Triggering animation " + paramName);
             anim.SetBool(paramName, true);

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ActivateHint : MonoBehaviour
 {
     public PuzzleBaseObject puzzleBase;
@@ -13,23 +12,22 @@ public class ActivateHint : MonoBehaviour
         gameState = GameState.Instance;
     }
 
-    
     public void SetHintActive()
     {
         PuzzleStep step = GetCurrentStep();
 
         Debug.Log("step is " + step.stepNo);
         Debug.Log("is hints null?" + step.hints.Equals(null));
-        bool allHintsActive =true;
-        for(int i = 0; i < step.hints.Length; i++)
+        bool allHintsActive = true;
+        for (int i = 0; i < step.hints.Length; i++)
         {
-            if(!step.hints[i].hintTaken)
+            if (!step.hints[i].hintTaken)
             {
                 allHintsActive = false;
             }
         }
 
-        if(allHintsActive)
+        if (allHintsActive)
         {
             return;
         }
@@ -53,8 +51,7 @@ public class ActivateHint : MonoBehaviour
                 }
             }
         }
-        else
-            Debug.Log("No hints for this step");
+        else Debug.Log("No hints for this step");
     }
 
     // puzzlebase has the current puzzle thisPuzzle
@@ -63,17 +60,17 @@ public class ActivateHint : MonoBehaviour
 
     public PuzzleStep GetCurrentStep()
     {
-        
-        if(gameState.ActivePuzzle.currentPuzzleStep != null)
+
+        if (gameState.ActivePuzzle.currentPuzzleStep != null)
         {
             return gameState.ActivePuzzle.currentPuzzleStep;
         }
-        if(puzzleBase != null)
+        if (puzzleBase != null)
         {
             Debug.Log("Puzzle base real AF");
-            for(int i = 0; i < puzzleBase.AllPuzzleSteps.Count; i++)
+            for (int i = 0; i < puzzleBase.AllPuzzleSteps.Count; i++)
             {
-                if(puzzleBase.AllPuzzleSteps[i].stepNo == gameState.ActivePuzzle.puzzleStepNum)
+                if (puzzleBase.AllPuzzleSteps[i].stepNo == gameState.ActivePuzzle.puzzleStepNum)
                 {
                     return puzzleBase.AllPuzzleSteps[i];
                 }
@@ -81,29 +78,20 @@ public class ActivateHint : MonoBehaviour
 
             return puzzleBase.thisPuzzle.currentPuzzleStep;
         }
-        else if(gameState.ActivePuzzle.puzzleBaseReference != null)
+        else if (gameState.ActivePuzzle.puzzleBaseReference != null)
         {
-                for(int i = 0; i < gameState.ActivePuzzle.puzzleBaseReference.AllPuzzleSteps.Count; i++)
+            for (int i = 0; i < gameState.ActivePuzzle.puzzleBaseReference.AllPuzzleSteps.Count; i++)
             {
-                if(gameState.ActivePuzzle.puzzleBaseReference.AllPuzzleSteps[i].stepNo == gameState.ActivePuzzle.puzzleStepNum)
+                if (gameState.ActivePuzzle.puzzleBaseReference.AllPuzzleSteps[i].stepNo == gameState.ActivePuzzle.puzzleStepNum)
                 {
                     return gameState.ActivePuzzle.puzzleBaseReference.AllPuzzleSteps[i];
                 }
             }
 
         }
-        
-        
+
         Debug.Log("No active step, how'd you get here?");
         return null;
     }
 
-
-    // get current step from thisPuzzle
-    // get Puzzle class
-    // PuzzleStep currentPuzzleStep
-
-    // if this puzzle has a hint 
-
-    // set hint as active 
 }

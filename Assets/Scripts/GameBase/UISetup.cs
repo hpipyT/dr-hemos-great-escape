@@ -31,7 +31,7 @@ public class UISetup : MonoBehaviour
     {
         get
         {
-            return lc.GetComponent<LocomotionTeleport>(); 
+            return lc.GetComponent<LocomotionTeleport>();
         }
     }
 
@@ -53,7 +53,7 @@ public class UISetup : MonoBehaviour
 
     public void Update()
     {
-       
+
     }
 
     [Conditional("DEBUG_LOCOMOTION_PANEL")]
@@ -69,7 +69,8 @@ public class UISetup : MonoBehaviour
     /// <typeparam name="TCategory"></typeparam>
     /// <typeparam name="TActivate"></typeparam>
     /// <param name="target"></param>
-    public static TActivate ActivateCategory<TCategory, TActivate>(GameObject target) where TCategory : MonoBehaviour where TActivate : MonoBehaviour
+    public static TActivate ActivateCategory<TCategory,
+    TActivate>(GameObject target) where TCategory : MonoBehaviour where TActivate : MonoBehaviour
     {
         var components = target.GetComponents<TCategory>();
         Log("Activate " + typeof(TActivate) + " derived from " + typeof(TCategory) + "[" + components.Length + "]");
@@ -101,12 +102,16 @@ public class UISetup : MonoBehaviour
     /// <typeparam name="TTarget"></typeparam>
     /// <typeparam name="TOrientation"></typeparam>
     /// <typeparam name="TTransition"></typeparam>
-    protected void ActivateHandlers<TInput, TAim, TTarget, TOrientation, TTransition>()
-        where TInput : TeleportInputHandler
-        where TAim : TeleportAimHandler
-        where TTarget : TeleportTargetHandler
-        where TOrientation : TeleportOrientationHandler
-        where TTransition : TeleportTransition
+    protected void ActivateHandlers<TInput,
+    TAim,
+    TTarget,
+    TOrientation,
+    TTransition>()
+    where TInput : TeleportInputHandler
+    where TAim : TeleportAimHandler
+    where TTarget : TeleportTargetHandler
+    where TOrientation : TeleportOrientationHandler
+    where TTransition : TeleportTransition
     {
         ActivateInput<TInput>();
         ActivateAim<TAim>();
@@ -117,32 +122,39 @@ public class UISetup : MonoBehaviour
 
     protected void ActivateInput<TActivate>() where TActivate : TeleportInputHandler
     {
-        ActivateCategory<TeleportInputHandler, TActivate>();
+        ActivateCategory<TeleportInputHandler,
+        TActivate>();
     }
 
     protected void ActivateAim<TActivate>() where TActivate : TeleportAimHandler
     {
-        ActivateCategory<TeleportAimHandler, TActivate>();
+        ActivateCategory<TeleportAimHandler,
+        TActivate>();
     }
 
     protected void ActivateTarget<TActivate>() where TActivate : TeleportTargetHandler
     {
-        ActivateCategory<TeleportTargetHandler, TActivate>();
+        ActivateCategory<TeleportTargetHandler,
+        TActivate>();
     }
 
     protected void ActivateOrientation<TActivate>() where TActivate : TeleportOrientationHandler
     {
-        ActivateCategory<TeleportOrientationHandler, TActivate>();
+        ActivateCategory<TeleportOrientationHandler,
+        TActivate>();
     }
 
     protected void ActivateTransition<TActivate>() where TActivate : TeleportTransition
     {
-        ActivateCategory<TeleportTransition, TActivate>();
+        ActivateCategory<TeleportTransition,
+        TActivate>();
     }
 
-    protected TActivate ActivateCategory<TCategory, TActivate>() where TCategory : MonoBehaviour where TActivate : MonoBehaviour
+    protected TActivate ActivateCategory<TCategory,
+    TActivate>() where TCategory : MonoBehaviour where TActivate : MonoBehaviour
     {
-        return ActivateCategory<TCategory, TActivate>(lc.gameObject);
+        return ActivateCategory<TCategory,
+        TActivate>(lc.gameObject);
     }
 
     protected void UpdateToggle(Toggle toggle, bool enabled)
@@ -185,7 +197,6 @@ public class UISetup : MonoBehaviour
         orient.Thumbstick = OVRInput.Controller.LTouch;
     }
 
-
     protected GameObject AddInstance(GameObject template, string label)
     {
         var go = Instantiate(template);
@@ -203,7 +214,11 @@ public class UISetup : MonoBehaviour
         //lc.PlayerController.FixedSpeedSteps = 1;
         lc.PlayerController.RotationEitherThumbstick = true;
         TeleportController.EnableRotation(true, false, false, true);
-        ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerLaser, TeleportTargetHandlerNode, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+        ActivateHandlers<TeleportInputHandlerTouch,
+        TeleportAimHandlerLaser,
+        TeleportTargetHandlerNode,
+        TeleportOrientationHandlerThumbstick,
+        TeleportTransitionBlink>();
         var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
         input.AimingController = OVRInput.Controller.RTouch;
         //var input = TeleportController.GetComponent<TeleportAimHandlerLaser>();
@@ -224,7 +239,11 @@ public class UISetup : MonoBehaviour
         var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
         input.InputMode = TeleportInputHandlerTouch.InputModes.ThumbstickTeleportForwardBackOnly;
         input.AimingController = OVRInput.Controller.Touch;
-        ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+        ActivateHandlers<TeleportInputHandlerTouch,
+        TeleportAimHandlerParabolic,
+        TeleportTargetHandlerPhysical,
+        TeleportOrientationHandlerThumbstick,
+        TeleportTransitionBlink>();
         var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
         orient.Thumbstick = OVRInput.Controller.Touch;
     }
@@ -239,30 +258,34 @@ public class UISetup : MonoBehaviour
         var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
         input.InputMode = TeleportInputHandlerTouch.InputModes.ThumbstickTeleport;
         input.AimingController = OVRInput.Controller.LTouch;
-        
-        ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+
+        ActivateHandlers<TeleportInputHandlerTouch,
+        TeleportAimHandlerParabolic,
+        TeleportTargetHandlerPhysical,
+        TeleportOrientationHandlerThumbstick,
+        TeleportTransitionBlink>();
         var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
         orient.Thumbstick = OVRInput.Controller.LTouch;
     }
 
     /*
-    void SetupRightTurnLeftTeleport()
-    {
-        SetupTeleportDefaults();
-        TeleportController.EnableRotation(true, false, false, false);
-        TeleportController.EnableMovement(false, false, false, false);
-        lc.PlayerController.SnapRotation = true;
-        lc.PlayerController.FixedSpeedSteps = 1;
+      void SetupRightTurnLeftTeleport()
+      {
+          SetupTeleportDefaults();
+          TeleportController.EnableRotation(true, false, false, false);
+          TeleportController.EnableMovement(false, false, false, false);
+          lc.PlayerController.SnapRotation = true;
+          lc.PlayerController.FixedSpeedSteps = 1;
 
-        var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
-        input.InputMode = TeleportInputHandlerTouch.InputModes.ThumbstickTeleport;
-        input.AimingController = OVRInput.Controller.LTouch;
-        
-        ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
-        var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
-        orient.Thumbstick = OVRInput.Controller.LTouch;
-    }
-	*/
+          var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
+          input.InputMode = TeleportInputHandlerTouch.InputModes.ThumbstickTeleport;
+          input.AimingController = OVRInput.Controller.LTouch;
+
+          ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+          var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
+          orient.Thumbstick = OVRInput.Controller.LTouch;
+      }
+      */
 
     // Shut down teleport. Basically reverts to OVRPlayerController.
     void SetupWalkOnly()
@@ -287,7 +310,11 @@ public class UISetup : MonoBehaviour
         var input = TeleportController.GetComponent<TeleportInputHandlerTouch>();
         input.InputMode = TeleportInputHandlerTouch.InputModes.ThumbstickTeleportForwardBackOnly;
         input.AimingController = OVRInput.Controller.RTouch;
-        ActivateHandlers<TeleportInputHandlerTouch, TeleportAimHandlerParabolic, TeleportTargetHandlerPhysical, TeleportOrientationHandlerThumbstick, TeleportTransitionBlink>();
+        ActivateHandlers<TeleportInputHandlerTouch,
+        TeleportAimHandlerParabolic,
+        TeleportTargetHandlerPhysical,
+        TeleportOrientationHandlerThumbstick,
+        TeleportTransitionBlink>();
         var orient = TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>();
         orient.Thumbstick = OVRInput.Controller.RTouch;
     }

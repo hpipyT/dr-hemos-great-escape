@@ -21,7 +21,7 @@ public class SendAttempt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnSubmit(string GAMEid, string time)
@@ -43,7 +43,8 @@ public class SendAttempt : MonoBehaviour
 
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {

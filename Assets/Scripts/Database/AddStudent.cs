@@ -11,7 +11,6 @@ public class AddStudent : MonoBehaviour
     public TMP_InputField classSection;
     public string url = "https://hemo-cardiac.azurewebsites.net/add-student.php"; // upload addStudent php
 
-
     public void OnSubmit()
     {
         Debug.Log("Sending data");
@@ -21,7 +20,7 @@ public class AddStudent : MonoBehaviour
     IEnumerator SendStudentData()
     {
         WWWForm form = new WWWForm();
-        
+
         form.AddField("FirstName", firstName.text);
         form.AddField("SID", int.Parse(sid.text));
         form.AddField("ClassSection", int.Parse(classSection.text));
@@ -31,9 +30,10 @@ public class AddStudent : MonoBehaviour
         Debug.Log(classSection.text);
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
-            if(send.result != UnityWebRequest.Result.Success)
+            if (send.result != UnityWebRequest.Result.Success)
             {
                 print(send.error);
                 Debug.Log("Uh oh, error");

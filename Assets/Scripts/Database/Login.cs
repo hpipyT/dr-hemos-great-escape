@@ -43,7 +43,8 @@ public class Login : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.Get(uri + userLogin.text + "&var2=" + userPassword.text))
         {
-            yield return www.SendWebRequest();
+            yield
+            return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -51,8 +52,8 @@ public class Login : MonoBehaviour
             }
             else
             {
-                
-                if(www.downloadHandler.text.Contains("objects"))
+
+                if (www.downloadHandler.text.Contains("objects"))
                 {
                     LoginData data = JsonUtility.FromJson<LoginData>("{\"SID\":\"" + www.downloadHandler.text + "\"}");
                     Debug.Log(www.downloadHandler.text);
@@ -78,7 +79,8 @@ public class Login : MonoBehaviour
 
     IEnumerator setupUI()
     {
-        yield return new WaitForSecondsRealtime(1);
+        yield
+        return new WaitForSecondsRealtime(1);
 
         UIBuilder.instance.AddLabel("Login");
         UIBuilder.instance.AddLabel("Username:");

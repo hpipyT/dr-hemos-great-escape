@@ -21,7 +21,6 @@ public class PuzzleObject : MonoBehaviour
     public bool activated;
     string objectName;
 
-    
     public GameObject puzzleGameObject;
     public GameObject targetGameObject;
 
@@ -33,9 +32,9 @@ public class PuzzleObject : MonoBehaviour
     public Animator anim;
     public string parameterName;
 
-
     // notes: each object that progresses the scene is a puzzleobject
-    public PuzzleObject(int stepNo, string objName){
+    public PuzzleObject(int stepNo, string objName)
+    {
         this.stepNumber = stepNo;
         this.objectName = objName;
         this.activated = false;
@@ -51,110 +50,68 @@ public class PuzzleObject : MonoBehaviour
         this.targetGameObject = gObject;
     }
 
-    // chest-key logic
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    // if chest is intended to be opened right now
-    //    if(targetGameObject != null)
-    //    {
-    //        if(collision.gameObject == targetGameObject && this.activated && this.isTrigger)
-    //        {
-    //            if (anim != null)
-    //            {
-    //                if(GameState.Instance.OfflineMode)
-    //                {
-    //                    this.step.TriggerAnimation("Open Chest", anim);
-    //                }
-    //                else
-    //                {
-    //                    this.step.GetComponent<PhotonView>().RPC("TriggerAnimation", RpcTarget.All, "Open Chest", anim);                    
-    //                }
-                    
-    //            }
-    //            Debug.Log("Puzzle Object triggered");
-    //            this.step.objectiveComplete();
-    //        }
-    //    }
-    //    // if chest is unlocked and the player is touching it 
-    //    else if(this.activated && this.isTrigger)
-    //    {
-    //        if(collision.gameObject.CompareTag("Player"))
-    //        {
-    //         Debug.Log("PuzzleObject [<color>Trigger " + puzzleGameObject.name + " </color>] interacted with by the player- objective complete");
-    //         if(this.step != null)
-    //         {
-    //                this.step.objectiveComplete();
-    //         }
-    //        }
-    //    }
-    //}
-
     private void OnTriggerEnter(Collider collision)
     {
         // if chest is intended to be opened right now
-        if(targetGameObject != null)
+        if (targetGameObject != null)
         {
-            if(collision.gameObject == targetGameObject && this.activated && this.isTrigger)
+            if (collision.gameObject == targetGameObject && this.activated && this.isTrigger)
             {
                 if (anim != null)
                 {
-                    if(GameState.Instance.OfflineMode)
+                    if (GameState.Instance.OfflineMode)
                     {
                         this.step.TriggerAnimation(parameterName, anim);
                     }
                     else
                     {
                         Debug.Log("called");
-                        this.step.GetComponent<PhotonView>().RPC("AltTriggerAnimation", RpcTarget.All, parameterName, this.anim.gameObject.name);                    
+                        this.step.GetComponent<PhotonView>().RPC("AltTriggerAnimation", RpcTarget.All, parameterName, this.anim.gameObject.name);
                     }
-                    
+
                 }
                 Debug.Log("Puzzle Object triggered");
                 this.step.objectiveComplete();
             }
         }
         // if chest is unlocked and the player is touching it 
-        else if(this.activated && this.isTrigger)
+        else if (this.activated && this.isTrigger)
         {
-            if(collision.gameObject.CompareTag("Player"))
+            if (collision.gameObject.CompareTag("Player"))
             {
-             Debug.Log("PuzzleObject [<color>Trigger " + puzzleGameObject.name + " </color>] interacted with by the player- objective complete");
-             if(this.step != null)
-             {
+                Debug.Log("PuzzleObject [<color>Trigger " + puzzleGameObject.name + " </color>] interacted with by the player- objective complete");
+                if (this.step != null)
+                {
                     this.step.objectiveComplete();
-             }
+                }
             }
         }
     }
-
 
     private bool Moved()
     {
         Vector3 displacement = transform.position - lastPos;
 
-        if (displacement.magnitude > 0.001)
-            return true;
+        if (displacement.magnitude > 0.001) return true;
         return false;
     }
 
     public void ActivateObject()
     {
         Debug.Log("activating puzzle object " + gameObject.name);
-        if(this.gameObject.activeSelf == false)
+        if (this.gameObject.activeSelf == false)
         {
             this.gameObject.SetActive(true);
         }
 
-        if(puzzleGameObject == null)
+        if (puzzleGameObject == null)
         {
             SetGameObject(this.gameObject);
         }
 
-        if(puzzleGameObject.activeSelf != true)
-            puzzleGameObject.SetActive(true);
+        if (puzzleGameObject.activeSelf != true) puzzleGameObject.SetActive(true);
 
-
-        if(anim != null && targetGameObject == null)
+        if (anim != null && targetGameObject == null)
         {
             if (GameState.Instance.OfflineMode)
             {
@@ -169,81 +126,79 @@ public class PuzzleObject : MonoBehaviour
             //anim.speed = 1;
             //anim.StartPlayback();
         }
-        if(isTrigger && objectCollider == null || isMoveable && objectRigidBody == null)
+        if (isTrigger && objectCollider == null || isMoveable && objectRigidBody == null)
         {
-               StartCoroutine(DelayedActivation());
-         }
+            StartCoroutine(DelayedActivation());
+        }
         else
         {
-        if (isTrigger && objectCollider != null)
-        {
-            objectCollider.enabled = true;
-        }
-        if (isMoveable && objectRigidBody != null)
-        {
-            objectRigidBody.isKinematic = false;
-            objectRigidBody.constraints = RigidbodyConstraints.None;
-        }
-                this.activated = true;
-
+            if (isTrigger && objectCollider != null)
+            {
+                objectCollider.enabled = true;
             }
-        
+            if (isMoveable && objectRigidBody != null)
+            {
+                objectRigidBody.isKinematic = false;
+                objectRigidBody.constraints = RigidbodyConstraints.None;
+            }
+            this.activated = true;
+
+        }
 
         //if (!isTrigger && !isMoveable)
         //    this.step.objectiveComplete();
     }
 
-
     public IEnumerator DelayedActivation()
     {
-        while(puzzleGameObject == null)
+        while (puzzleGameObject == null)
         {
             SetGameObject(this.gameObject);
         }
-        if(isTrigger)
+        if (isTrigger)
         {
-            while(objectCollider == null)
+            while (objectCollider == null)
             {
-               objectCollider = puzzleGameObject.GetComponent<Collider>();
-                yield return null;
-             }
+                objectCollider = puzzleGameObject.GetComponent<Collider>();
+                yield
+                return null;
+            }
         }
 
-        if(isMoveable)
+        if (isMoveable)
         {
-        while(objectRigidBody == null)
-        {
-            objectRigidBody = puzzleGameObject.GetComponent<Rigidbody>();
-            yield return null;
-        }
+            while (objectRigidBody == null)
+            {
+                objectRigidBody = puzzleGameObject.GetComponent<Rigidbody>();
+                yield
+                return null;
+            }
         }
 
         ActivateObject();
     }
-    
 
     public void DeactivateObject()
     {
-        
-        if(isMoveable && objectRigidBody != null)
+
+        if (isMoveable && objectRigidBody != null)
         {
             objectRigidBody.isKinematic = true;
-            if(freezeOnInactive)
+            if (freezeOnInactive)
             {
-            if(!this.step.stepCompleted)
-            {
-                objectRigidBody.constraints = RigidbodyConstraints.FreezeAll;
-            }
+                if (!this.step.stepCompleted)
+                {
+                    objectRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                }
             }
         }
         if (isTrigger && objectCollider != null)
         {
-            if(freezeOnInactive)
-                objectCollider.enabled = false;
+            if (freezeOnInactive) objectCollider.enabled = false;
         }
-        if(disappearOnNextStep)
+        if (disappearOnNextStep)
         {
-            if(puzzleGameObject != null && puzzleGameObject != this.gameObject)
+            if (puzzleGameObject != null && puzzleGameObject != this.gameObject)
             {
                 puzzleGameObject.SetActive(false);
             }
@@ -263,21 +218,19 @@ public class PuzzleObject : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if(puzzleGameObject == null)
-            SetGameObject(this.gameObject);
+        if (puzzleGameObject == null) SetGameObject(this.gameObject);
 
         if (isTrigger)
         {
             objectCollider = puzzleGameObject.GetComponent<Collider>();
         }
-        
+
         if (isMoveable)
         {
             lastPos = transform.position;
-            if(objectRigidBody == null)
-                objectRigidBody = puzzleGameObject.GetComponent<Rigidbody>();
+            if (objectRigidBody == null) objectRigidBody = puzzleGameObject.GetComponent<Rigidbody>();
 
-            if(objectRigidBody == null)
+            if (objectRigidBody == null)
             {
                 objectRigidBody = puzzleGameObject.GetComponentInChildren<Rigidbody>();
                 Debug.Log("Finding the rigid body in children.");
@@ -288,7 +241,7 @@ public class PuzzleObject : MonoBehaviour
             }
         }
 
-        if(anim != null)
+        if (anim != null)
         {
             //anim.speed = 0;
         }
@@ -297,25 +250,23 @@ public class PuzzleObject : MonoBehaviour
 
     }
 
-    GameState gs;
-
     public void Start()
     {
-        // gs = GameObject.Find("GameState").GetComponent<GameState>();
+
     }
 
     public void PuzzleLoaded(PuzzleBaseObject puzBaseObj)
     {
         puzBaseObj.AddPuzzleObject(this);
-        if(step == null)
+        if (step == null)
         {
-            
+
         }
         else
         {
-            for(int i = 0; i < step.targetObjects.Length; i++)
+            for (int i = 0; i < step.targetObjects.Length; i++)
             {
-                if(step.targetObjects[i] == this)
+                if (step.targetObjects[i] == this)
                 {
                     return;
                 }
@@ -327,20 +278,16 @@ public class PuzzleObject : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(activated)
+        if (activated)
         {
-            //if (isMoveable && Moved())
-           // {
-         //       isMoveable = false;
-             //  this.step.objectiveComplete();
-          //  }
+            // Any future puzzle object logic should happen here.
         }
 
-        if(persistUntilStep > 0)
+        if (persistUntilStep > 0)
         {
-            if(step != null && persistUntilStep == GameState.Instance.ActivePuzzle.currentPuzzleStep.stepNo)
+            if (step != null && persistUntilStep == GameState.Instance.ActivePuzzle.currentPuzzleStep.stepNo)
             {
-                if(puzzleGameObject != null && puzzleGameObject != this.gameObject)
+                if (puzzleGameObject != null && puzzleGameObject != this.gameObject)
                 {
                     puzzleGameObject.SetActive(false);
                 }

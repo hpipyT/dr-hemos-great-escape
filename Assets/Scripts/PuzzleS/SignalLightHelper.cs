@@ -16,7 +16,7 @@ public class SignalLightHelper : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(meshRend == null)
+        if (meshRend == null)
         {
             meshRend = this.gameObject.GetComponent<MeshRenderer>();
         }
@@ -24,21 +24,21 @@ public class SignalLightHelper : MonoBehaviour
         GameState.Instance.roomComplete.AddListener(ChangeLight);
         litUp = CheckForPuzzleCompletion(room);
         ChangeLight();
-        
+
     }
 
     bool CheckForPuzzleCompletion(string puzzleName)
     {
-        for(int i = 0; i < GameState.Instance.AllPuzzles.Count; i++)
+        for (int i = 0; i < GameState.Instance.AllPuzzles.Count; i++)
         {
-            if(GameState.Instance.AllPuzzles[i] == null)
+            if (GameState.Instance.AllPuzzles[i] == null)
             {
                 continue;
             }
 
-            if(GameState.Instance.AllPuzzles[i].room == puzzleName)
+            if (GameState.Instance.AllPuzzles[i].room == puzzleName)
             {
-                if(GameState.Instance.AllPuzzles[i].completed)
+                if (GameState.Instance.AllPuzzles[i].completed)
                 {
                     return true;
                 }
@@ -51,17 +51,17 @@ public class SignalLightHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void ChangeLight()
     {
-        if(!litUp)
+        if (!litUp)
         {
             litUp = CheckForPuzzleCompletion(room);
         }
 
-        if(litUp)
+        if (litUp)
         {
             meshRend.material = gatsbyLight;
         }

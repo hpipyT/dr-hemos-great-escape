@@ -17,7 +17,7 @@ public class CreateAttempt : MonoBehaviour
     public TMP_InputField sid4;
     public TMP_InputField sid5;
     public TMP_InputField time;
-    
+
     public string url = "https://hemo-cardiac.azurewebsites.net/hemo-create-attempt.php"; // upload addStudent php
 
     // TMP_InputField[] sids;
@@ -26,7 +26,7 @@ public class CreateAttempt : MonoBehaviour
     public void OnSubmit()
     {
         // change to get student's SID from login 
-        
+
         sids.Add(sid1);
         sids.Add(sid2);
         sids.Add(sid3);
@@ -41,7 +41,7 @@ public class CreateAttempt : MonoBehaviour
     IEnumerator SendStudentData()
     {
         WWWForm form = new WWWForm();
-        
+
         form.AddField("TeamName", teamName.text);
         form.AddField("TimeSpent", time.text);
         form.AddField("Completed", 1);
@@ -59,9 +59,10 @@ public class CreateAttempt : MonoBehaviour
 
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
-            if(send.result != UnityWebRequest.Result.Success)
+            if (send.result != UnityWebRequest.Result.Success)
             {
                 print(send.error);
                 Debug.Log("Uh oh, error");
@@ -73,41 +74,4 @@ public class CreateAttempt : MonoBehaviour
             }
         }
     }
-
-
-
-    // in CreateAndJoinRooms
-    /*IEnumerator CreateNewAttempt()
-    {
-        WWWForm form = new WWWForm();
-
-        form.AddField("TeamName", TeamName.text);
-        form.AddField("TimeSpent", 0);
-        form.AddField("Completed", 0);
-        form.AddField("SID1", student.GetSID());
-
-        // form.AddField("SID1", int.Parse(sids[0].text));
-        string url = "https://hemo-cardiac.azurewebsites.net/hemo-create-attempt.php";
-
-        using (var send = UnityWebRequest.Post(url, form))
-        {
-            yield return send.SendWebRequest();
-
-            if (send.result != UnityWebRequest.Result.Success)
-            {
-                print(send.error);
-                Debug.Log("Uh oh, error");
-            }
-            else
-            {
-                Debug.Log("Created new attempt");
-                Debug.Log("GAMEid: " + send.downloadHandler.text);
-                GAMEid = send.downloadHandler.text;
-                PhotonNetwork.CreateRoom(GAMEid);
-
-                // put this GAMEid somewhere in the scene
-
-            }
-        }*/
-
-    }
+}

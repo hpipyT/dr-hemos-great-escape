@@ -9,10 +9,9 @@ public class ButtonActivate : MonoBehaviour
 
     // Set if for some reason there is a button that does not correspond to a puzzle step entry box.
     public PuzzleBaseObject puzzleBase;
-    
+
     // Set this to the step this button is inputting an answer for.
     public PuzzleStep relevantStep;
-
 
     public string answer = "";
 
@@ -22,12 +21,11 @@ public class ButtonActivate : MonoBehaviour
 
         // If the answer is not empty
 
-        if(answer != "" && step != null)
+        if (answer != "" && step != null)
         {
             step.solutionAttempt(answer);
         }
     }
-
 
     // puzzlebase has the current puzzle thisPuzzle
     // check each puzzlestep if active
@@ -39,11 +37,11 @@ public class ButtonActivate : MonoBehaviour
         return GameState.Instance.ActivePuzzle.currentPuzzleStep;
 
         // Yeah i know, this was probably the play from teh start.
-        if(relevantStep != null)
+        if (relevantStep != null)
         {
             return relevantStep;
         }
-        
+
         // TODO: WILL FAIL, BECAUSE PUZZLE BASE IS NOT GETTING SET DYNAMICALLY.
         // FOR THE MEANTIME, SET IT MANUALLY
         foreach (PuzzleStep step in GameState.Instance.ActivePuzzle.puzzleSteps)
@@ -61,18 +59,17 @@ public class ButtonActivate : MonoBehaviour
     private void Start()
     {
         /*if(puzzleBase == null)
-        {
-            if(relevantStep != null)
             {
-                puzzleBase = relevantStep.parentPuzzle.puzzleBaseReference;
-            }
-            else
-            {
-                puzzleBase = GameObject.Find("PUZZLE BASE").GetComponent<PuzzleBaseObject>();
-            }
-        }*/
+                if(relevantStep != null)
+                {
+                    puzzleBase = relevantStep.parentPuzzle.puzzleBaseReference;
+                }
+                else
+                {
+                    puzzleBase = GameObject.Find("PUZZLE BASE").GetComponent<PuzzleBaseObject>();
+                }
+            }*/
     }
-
 
     // get current step from thisPuzzle
     // get Puzzle class

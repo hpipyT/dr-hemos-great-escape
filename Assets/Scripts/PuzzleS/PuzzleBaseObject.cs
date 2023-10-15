@@ -10,7 +10,7 @@ public class PuzzleBaseObject : MonoBehaviourPun
 {
     [SerializeField]
     public Puzzle thisPuzzle;
-    
+
     [SerializeField]
     string roomName;
 
@@ -39,9 +39,9 @@ public class PuzzleBaseObject : MonoBehaviourPun
 
     public PuzzleStep GetPuzzleStepByNumber(int number)
     {
-        for(int i = 0; i < AllPuzzleSteps.Count; i++)
+        for (int i = 0; i < AllPuzzleSteps.Count; i++)
         {
-            if(AllPuzzleSteps[i].stepNo == number)
+            if (AllPuzzleSteps[i].stepNo == number)
             {
                 return AllPuzzleSteps[i];
             }
@@ -50,9 +50,10 @@ public class PuzzleBaseObject : MonoBehaviourPun
         return null;
     }
 
-    public int totalHintCount(){
+    public int totalHintCount()
+    {
         int total = 0;
-        for(int i = 0; i < AllPuzzleSteps.Count; i++)
+        for (int i = 0; i < AllPuzzleSteps.Count; i++)
         {
             total += AllPuzzleSteps[i].hints.Length;
         }
@@ -66,8 +67,9 @@ public class PuzzleBaseObject : MonoBehaviourPun
         noisePlayer.PlayOneShot(correct);
     }
 
-    public void LoadPuzzle(){
-        if(this.thisPuzzle != null)
+    public void LoadPuzzle()
+    {
+        if (this.thisPuzzle != null)
         {
             thisPuzzle.runningTime = 0;
             thisPuzzle.completionTime = -1;
@@ -107,39 +109,38 @@ public class PuzzleBaseObject : MonoBehaviourPun
 
     public Hint[] LoadHintsFromChildren(PuzzleStep Step)
     {
-       Hint[] hints =  Step.gameObject.GetComponentsInChildren<Hint>();
-        if (hints == null || hints.Length == 0)
-            hints = new Hint[0];
+        Hint[] hints = Step.gameObject.GetComponentsInChildren<Hint>();
+        if (hints == null || hints.Length == 0) hints = new Hint[0];
 
-        for(int i = 0; i < hints.Length; i++)
+        for (int i = 0; i < hints.Length; i++)
         {
-            if(hints[i].puzStep == null)
+            if (hints[i].puzStep == null)
             {
-            hints[i].puzStep = Step;
+                hints[i].puzStep = Step;
             }
         }
         return hints;
 
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
         AllPuzzleObjects = new List<PuzzleObject>();
-        
-        if(gameState == null)
+
+        if (gameState == null)
         {
             gameState = GameState.Instance;
         }
 
-        if(thisPuzzle == null || thisPuzzle != gameState.GetPuzzle(roomName))
+        if (thisPuzzle == null || thisPuzzle != gameState.GetPuzzle(roomName))
         {
             thisPuzzle = gameState.GetPuzzle(roomName);
         }
 
         thisPuzzle = gameState.GetPuzzle(roomName);
 
-       // Broad("PuzzleLoaded", this);
+        // Broad("PuzzleLoaded", this);
         LoadPuzzle();
         GameState.Instance.SetPuzzle(thisPuzzle);
         gameState.EscapeObject = this.gameObject;
@@ -157,19 +158,19 @@ public class PuzzleBaseObject : MonoBehaviourPun
     {
         return;
         /*
-        if(input.text == prevText)
-        {
-            return;
-        }
+                if(input.text == prevText)
+                {
+                    return;
+                }
 
-        if(GameState.Instance.OfflineMode)
-        {
-            textUpdateHelp(input.gameObject.name, input.text);
-        }
-        else
-        {
-            photonView.RPC("textUpdateHelp", RpcTarget.Others, input.gameObject.name, input.text);
-        }*/
+                if(GameState.Instance.OfflineMode)
+                {
+                    textUpdateHelp(input.gameObject.name, input.text);
+                }
+                else
+                {
+                    photonView.RPC("textUpdateHelp", RpcTarget.Others, input.gameObject.name, input.text);
+                }*/
     }
 
     [PunRPC]
@@ -179,7 +180,6 @@ public class PuzzleBaseObject : MonoBehaviourPun
         input.text = text;
         prevText = text;
     }
-
 
     public void TryAnswer(TMPro.TMP_InputField input)
     {
@@ -191,7 +191,6 @@ public class PuzzleBaseObject : MonoBehaviourPun
         this.thisPuzzle.currentPuzzleStep.solutionAttempt(choice);
     }
 
-
     [PunRPC]
     public void puzzleCompletion()
     {
@@ -201,11 +200,11 @@ public class PuzzleBaseObject : MonoBehaviourPun
     [PunRPC]
     public List<PuzzleStep> LoadPuzzleSteps(Puzzle parentPuzzle)
     {
-        List<PuzzleStep> steps =  gameObject.GetComponentsInChildren<PuzzleStep>().ToList();
+        List<PuzzleStep> steps = gameObject.GetComponentsInChildren<PuzzleStep>().ToList();
         List<PuzzleStep> realSteps = new List<PuzzleStep>();
-        for(int i = 0; i < steps.Count; i++)
+        for (int i = 0; i < steps.Count; i++)
         {
-            if(!steps[i].isHint)
+            if (!steps[i].isHint)
             {
                 realSteps.Add(steps[i]);
             }
@@ -213,11 +212,11 @@ public class PuzzleBaseObject : MonoBehaviourPun
 
         steps = realSteps;
         Debug.Log("steps count is " + steps.Count);
-        if(parentPuzzle == null || parentPuzzle.puzzleSteps == null)
+        if (parentPuzzle == null || parentPuzzle.puzzleSteps == null)
         {
-            for(int i = 0; i < steps.Count; i++)
+            for (int i = 0; i < steps.Count; i++)
             {
-                if(steps[i].isHint)
+                if (steps[i].isHint)
                 {
                     continue;
                 }
@@ -230,47 +229,42 @@ public class PuzzleBaseObject : MonoBehaviourPun
 
         }
 
-        for(int i = 0; i < steps.Count; i++)
+        for (int i = 0; i < steps.Count; i++)
         {
-            if(steps[i].isHint)
-                {
-                    continue;
-                }
-            if(parentPuzzle.puzzleSteps[i] != null)
+            if (steps[i].isHint)
+            {
+                continue;
+            }
+            if (parentPuzzle.puzzleSteps[i] != null)
             {
                 steps[i] = parentPuzzle.puzzleSteps[i];
             }
             else
-            {                
+            {
                 steps[i].parentPuzzle = parentPuzzle;
                 steps[i].incorrect = incorrect;
                 steps[i].hints = LoadHintsFromChildren(steps[i]);
             }
         }
 
-                    steps.OrderBy(i => i.stepNo);
+        steps.OrderBy(i => i.stepNo);
 
         return steps;
     }
 
     public PuzzleObject GetPuzzleObject(PuzzleStep step)
     {
-        PuzzleObject obj = (PuzzleObject) AllPuzzleObjects.Where(x => x.step == step);
+        PuzzleObject obj = (PuzzleObject)AllPuzzleObjects.Where(x => x.step == step);
         return obj;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(GameState.Instance.ActivePuzzle == null)
+        if (GameState.Instance.ActivePuzzle == null)
         {
             GameState.Instance.SetPuzzle(thisPuzzle);
         }
     }
-
-
-
-
-    
 
 }

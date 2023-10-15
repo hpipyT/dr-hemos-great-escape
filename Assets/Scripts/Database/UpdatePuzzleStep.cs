@@ -11,9 +11,7 @@ public class UpdatePuzzleStep : MonoBehaviour
     public string time;
     public string hints;
 
-
     public string url = "https://hemo-cardiac.azurewebsites.net/hemo-update-puzzleStep.php"; // upload addStudent php
-
 
     public void OnSubmit(PuzzleStepData data)
     {
@@ -35,13 +33,12 @@ public class UpdatePuzzleStep : MonoBehaviour
         form.AddField("TimeTaken", time);
         form.AddField("HintsTaken", hints);
 
-
-
         // form.AddField("SID1", int.Parse(sids[0].text));
 
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {

@@ -22,13 +22,12 @@ public class KeyboardKeyPress : MonoBehaviour
 
     public Vector3 finalKeyPos;
 
-
     // Start is called before the first frame update
     void Start()
     {
         _collider = this.gameObject.GetComponent<BoxCollider>();
         letter = transform.parent.gameObject.name;
-        letter = ValidateLetter(letter);       
+        letter = ValidateLetter(letter);
         keycap = transform.parent.gameObject.GetComponentInChildren<TextMeshProUGUI>();
         if (keycap != null)
         {
@@ -50,7 +49,7 @@ public class KeyboardKeyPress : MonoBehaviour
 
     string ValidateLetter(string letter)
     {
-        if(letter.Length != 1)
+        if (letter.Length != 1)
         {
             special = true;
             return letter;
@@ -65,38 +64,38 @@ public class KeyboardKeyPress : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public const float distance = .01f; 
+    public const float distance = .01f;
 
     void keycapMover()
     {
         _collider.enabled = false;
-        StartCoroutine(KeyMove(distance));// * multiplier))
+        StartCoroutine(KeyMove(distance)); // * multiplier))
     }
 
     void MoveKeycap(bool downwards)
     {
         /*int multiplier = -1;
-        if(!downwards)
-        {
-            multiplier = 1;
-        }
-        if(!alreadyMoving && !pressed)
-        {*/
-            //StartCoroutine(KeyMove(distance));// * multiplier));
+            if(!downwards)
+            {
+                multiplier = 1;
+            }
+            if(!alreadyMoving && !pressed)
+            {*/
+        //StartCoroutine(KeyMove(distance));// * multiplier));
         //}
 
-    //    if(GameState.Instance.OfflineMode)
-       // {
+        //    if(GameState.Instance.OfflineMode)
+        // {
         keycapMover();
         /*}
-        else
-        {
-        photonView.RPC("keycapMover", RpcTarget.All);
-        }*/
-        
+            else
+            {
+            photonView.RPC("keycapMover", RpcTarget.All);
+            }*/
+
     }
 
     public void PlayClickSound()
@@ -107,33 +106,28 @@ public class KeyboardKeyPress : MonoBehaviour
         sounds[Random.Range(0, 4)].Play();
     }
 
-
     float cooldown = 0;
-
-    
 
     void FixedUpdate()
     {
-  
-        
-        
+
         this.gameObject.transform.position = keycapGameobject.transform.position;
-        if(!alreadyMoving && !pressed  && !depressing)
+        if (!alreadyMoving && !pressed && !depressing)
         {
-            if(keycapGameobject.transform.position.y < baseYHeight)
+            if (keycapGameobject.transform.position.y < baseYHeight)
             {
                 //StartCoroutine(KeyUnmove());
                 Debug.Log("calling this rn");
             }
         }
-       
+
     }
 
     public void keyHelper()
     {
-        if(special)
+        if (special)
         {
-            switch(letter)
+            switch (letter)
             {
                 case "Back":
                     parentKeyboardScript.Backspace();
@@ -163,22 +157,21 @@ public class KeyboardKeyPress : MonoBehaviour
 
     public const float buttonSpeed = .23f;
 
-
     bool moveDownAgain;
     IEnumerator KeyMove(float distance)
     {
 
         float finalYpos = finalKeyPos.y - keycapGameobject.transform.position.y;
         alreadyMoving = true;
-        
+
         cooldown = 0.5f;
 
-        if(distance > 0)
+        if (distance > 0)
         {
             //finalYpos = baseYHeight;
         }
 
-        float trueDistance =  finalKeyPos.y - keycapGameobject.transform.position.y;
+        float trueDistance = finalKeyPos.y - keycapGameobject.transform.position.y;
         Debug.Log("true distance to move is " + trueDistance + " FinalYos is " + finalYpos + " because the OG and End are : " + keycapGameobject.transform.position.y + " and " + finalKeyPos.y);
         /// <summary>
         ///  speed = distance / time
@@ -186,37 +179,38 @@ public class KeyboardKeyPress : MonoBehaviour
         float newDuration = Mathf.Abs(trueDistance / buttonSpeed);
         float time = 0;
         Vector3 newPos = keycapGameobject.transform.position;
-        while(time < newDuration)
+        while (time < newDuration)
         {
             newPos = keycapGameobject.transform.position;
             newPos.y += -1 * Mathf.Abs(buttonSpeed * Time.fixedDeltaTime);
             time += Time.fixedDeltaTime;
             keycapGameobject.transform.position = newPos;
-            yield return new WaitForFixedUpdate();
+            yield
+            return new WaitForFixedUpdate();
         }
 
-        
         time = 0;
         while (time < .06f)
         {
             time += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            yield
+            return new WaitForFixedUpdate();
         }
-
 
         alreadyMoving = false;
 
         depressing = true;
         newPos = keycapGameobject.transform.position;
-        trueDistance =  baseYHeight - newPos.y;
-                
-        if(trueDistance < 0)
+        trueDistance = baseYHeight - newPos.y;
+
+        if (trueDistance < 0)
         {
             newPos.y = baseYHeight;
             keycapGameobject.transform.position = newPos;
             //pressed = false;
             _collider.enabled = true;
-            yield break;
+            yield
+            break;
         }
         else if ((newPos.y + trueDistance) > baseYHeight)
         {
@@ -224,81 +218,87 @@ public class KeyboardKeyPress : MonoBehaviour
             keycapGameobject.transform.position = newPos;
             //pressed = false;
             _collider.enabled = true;
-            yield break;
+            yield
+            break;
         }
         Debug.Log("true distance to UNMOVE is " + trueDistance + " because the OG and End are : " + keycapGameobject.transform.position.y + " and " + baseYHeight);
         float duration = Mathf.Abs(trueDistance / buttonSpeed);
         time = 0;
-        while(time < duration)
+        while (time < duration)
         {
             newPos = keycapGameobject.transform.position;
             newPos.y += (buttonSpeed * Time.fixedDeltaTime);
-            if(newPos.y > baseYHeight)
+            if (newPos.y > baseYHeight)
             {
                 newPos.y = baseYHeight;
                 keycapGameobject.transform.position = newPos;
                 //pressed = false;
                 _collider.enabled = true;
-                yield break;
-                
+                yield
+                break;
+
             }
             time += Time.fixedDeltaTime;
             keycapGameobject.transform.position = newPos;
-            yield return new WaitForFixedUpdate();
+            yield
+            return new WaitForFixedUpdate();
         }
 
         depressing = false;
         //pressed = false;
         _collider.enabled = true;
-        yield break;
-
+        yield
+        break;
 
     }
 
     IEnumerator KeyUnmove()
     {
         //while(alreadyMoving)
-      //  {
+        //  {
         //    yield return new WaitForFixedUpdate();
-       // }
+        // }
         depressing = true;
         Vector3 newPos = keycapGameobject.transform.position;
-        float trueDistance =  baseYHeight - newPos.y;
-                
+        float trueDistance = baseYHeight - newPos.y;
 
-        if(trueDistance < 0)
+        if (trueDistance < 0)
         {
-            yield break;
+            yield
+            break;
         }
         else if ((newPos.y + trueDistance) > baseYHeight)
         {
-            yield break;
+            yield
+            break;
         }
-Debug.Log("true distance to UNMOVE is " + trueDistance + " because the OG and End are : " + keycapGameobject.transform.position.y + " and " + baseYHeight);
+        Debug.Log("true distance to UNMOVE is " + trueDistance + " because the OG and End are : " + keycapGameobject.transform.position.y + " and " + baseYHeight);
         float duration = Mathf.Abs(trueDistance / buttonSpeed);
         float currentTime = 0;
-        while(currentTime < duration)
+        while (currentTime < duration)
         {
             newPos = keycapGameobject.transform.position;
             newPos.y += (buttonSpeed * Time.fixedDeltaTime);
-            if(newPos.y > baseYHeight)
+            if (newPos.y > baseYHeight)
             {
-                yield break;
+                yield
+                break;
             }
             currentTime += Time.fixedDeltaTime;
             keycapGameobject.transform.position = newPos;
-            yield return new WaitForFixedUpdate();
+            yield
+            return new WaitForFixedUpdate();
         }
 
         depressing = false;
         pressed = false;
-        yield break;
+        yield
+        break;
     }
-
 
     //void OnCollisionEnter(Collision other)
     //{
-        
+
     //    if(other.gameObject.tag == "Player")// && !depressing)
     //    {
     //        pressed = false;
@@ -334,13 +334,13 @@ Debug.Log("true distance to UNMOVE is " + trueDistance + " because the OG and En
 
     void OnTriggerEnter(Collider other)
     {
-        if(pressed)
+        if (pressed)
         {
             return;
         }
-        if(other.gameObject.CompareTag("Player"))// && cooldown == 0)
+        if (other.gameObject.CompareTag("Player")) // && cooldown == 0)
         {
-            if(depressing)
+            if (depressing)
             {
                 //StopCoroutine(KeyUnmove());
                 depressing = false;

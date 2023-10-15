@@ -19,13 +19,12 @@ public class HeemRises : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
 
+    }
 
     public IEnumerator RiseHim()
     {
-        
+
         float t = 0.0f;
         float time = 1.0f;
 
@@ -35,24 +34,25 @@ public class HeemRises : MonoBehaviour
         {
             // interpolate where the droid will be at time (t/time), given start, and end (start + step)
             newPos = Vector3.Lerp(newPos, pos, speed * Time.fixedDeltaTime);
-            if(Mathf.Abs(pos.y - newPos.y) < 0.08f)
+            if (Mathf.Abs(pos.y - newPos.y) < 0.08f)
             {
                 newPos = pos;
             }
             this.gameObject.transform.position = newPos;
 
-            
             t += Time.fixedDeltaTime;
 
-            yield return new WaitForFixedUpdate();
+            yield
+            return new WaitForFixedUpdate();
         }
 
-            // dumb
-            while (textBubble.alpha < 1.0f)
-            {
-                yield return new WaitForSecondsRealtime(0.0025f);
-                textBubble.alpha += 0.01f;
-            }
+        // dumb
+        while (textBubble.alpha < 1.0f)
+        {
+            yield
+            return new WaitForSecondsRealtime(0.0025f);
+            textBubble.alpha += 0.01f;
+        }
 
     }
 

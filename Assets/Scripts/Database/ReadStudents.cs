@@ -14,7 +14,8 @@ public class ReadStudents : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.Get("https://hemo-cardiac.azurewebsites.net/read-students.php"))
         {
-            yield return www.SendWebRequest();
+            yield
+            return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -28,7 +29,7 @@ public class ReadStudents : MonoBehaviour
                 foreach (StudentData entry in array.items)
                 {
                     Debug.Log("SID:" + entry.SID + "Section: " + entry.Section + "\nLoggedIn: " + entry.LoggedIn);
-                    
+
                 }
             }
         }

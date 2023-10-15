@@ -41,7 +41,8 @@ public class CreatePuzzleStep : MonoBehaviour
 
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {

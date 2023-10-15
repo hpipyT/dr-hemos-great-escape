@@ -14,7 +14,8 @@ public class RetrieveScores : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.Get("https://com-tech-xr-php.azurewebsites.net/retrieve-scores.php"))
         {
-            yield return www.SendWebRequest();
+            yield
+            return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {

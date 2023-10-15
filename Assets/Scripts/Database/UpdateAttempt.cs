@@ -13,14 +13,12 @@ public class UpdateAttempt : MonoBehaviour
     public string time;
     public int playerCount;
 
-
     public string url = "https://hemo-cardiac.azurewebsites.net/update-hemo-attempt.php"; // upload addStudent php
 
     public void Start()
     {
         OnSubmit(gameID, "10");
     }
-
 
     public void OnSubmit(string GAMEid, string time)
     {
@@ -36,7 +34,6 @@ public class UpdateAttempt : MonoBehaviour
 
         // TODO: get player count
         playerCount = 2;
-
 
         // Host on own will be SID[1]
         // subsequent joins are SID[playerCount]
@@ -55,7 +52,8 @@ public class UpdateAttempt : MonoBehaviour
         string url = "https://hemo-cardiac.azurewebsites.net/hemo-update-attempt.php";
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {
@@ -69,7 +67,7 @@ public class UpdateAttempt : MonoBehaviour
             }
         }
 
-
-        yield return null;
+        yield
+        return null;
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 
-
 public class GetScores : MonoBehaviour
 {
     public TextMeshProUGUI attempt1;
@@ -32,7 +31,8 @@ public class GetScores : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.Get("https://hemo-cardiac.azurewebsites.net/hemo-get-top-scores.php"))
         {
-            yield return www.SendWebRequest();
+            yield
+            return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -44,18 +44,17 @@ public class GetScores : MonoBehaviour
                 // 'items' must match name of StudentData[] in ScoreContainer
                 ScoreContainer array = JsonUtility.FromJson<ScoreContainer>("{\"items\":" + www.downloadHandler.text + "}");
 
-
                 // reads team names to evens, times to odds
                 int i = 0;
                 foreach (ScoreData entry in array.items)
                 {
                     strings[i] = entry.TeamName;
-                    strings[i+1] = entry.TimeSpent.ToString();
+                    strings[i + 1] = entry.TimeSpent.ToString();
                     Debug.Log(strings[i]);
                     i += 2;
-                    
+
                 }
-                
+
                 attempt1.text = strings[0];
                 attempt2.text = strings[2];
                 attempt3.text = strings[4];
@@ -74,18 +73,15 @@ public class GetScores : MonoBehaviour
             // disgusting rounding error
             time = Mathf.Floor(time);
 
-            int minutes =  (int)time / 60;
+            int minutes = (int)time / 60;
             int seconds = (int)(time % 60);
 
-            if (seconds == 0)
-                return minutes + ":00";
-            if (seconds / 10 > 0)
-                return minutes + ":" + seconds;
+            if (seconds == 0) return minutes + ":00";
+            if (seconds / 10 > 0) return minutes + ":" + seconds;
             return minutes + ":0" + seconds;
         }
-        else
-            return "00:00";
-        
+        else return "00:00";
+
     }
 
 }

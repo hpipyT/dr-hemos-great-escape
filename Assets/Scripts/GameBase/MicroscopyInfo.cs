@@ -12,7 +12,7 @@ public class MicroscopyInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(credits != null)
+        if (credits != null)
         {
             credits.StartScrolling();
         }
@@ -29,7 +29,7 @@ public class MicroscopyInfo : MonoBehaviour
         string displayString = testSpan.ToString("mm':'ss");
 
         Debug.Log("Total time to complete was " + t);
-        
+
         timeField.text = displayString;
 
         int hintsUsed = GameState.Instance.AllHintsTaken().Count;

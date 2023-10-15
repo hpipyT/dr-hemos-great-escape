@@ -14,7 +14,7 @@ public class DestroyHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void DestroyEscapeGameManager(GameObject me)
@@ -26,14 +26,13 @@ public class DestroyHelper : MonoBehaviour
         SceneManager.LoadScene("LoginScene");
     }
 
-
-
     public IEnumerator DestroyIt(GameObject me)
     {
         Debug.Log("Destroying EscapeGameManager");
         Destroy(me);
         Debug.Log("EscapeGameManager Destroyed");
-        yield return null;
+        yield
+        return null;
         Destroy(this);
     }
     public void LoadHomeScreen()
@@ -44,12 +43,14 @@ public class DestroyHelper : MonoBehaviour
     public IEnumerator ProceedToNextScene()
     {
         Debug.Log("Waiting to load Login...");
-        yield return new WaitForSeconds(1.0f);
+        yield
+        return new WaitForSeconds(1.0f);
         Debug.Log("Loading Login");
         SceneManager.LoadScene("LoginScene");
         Debug.Log("Login Loaded");
         Destroy(this);
-        yield return null;
+        yield
+        return null;
     }
 
 }

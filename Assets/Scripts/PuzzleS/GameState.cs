@@ -12,11 +12,15 @@ using UnityEngine.Events;
 public class GameState : MonoBehaviourPun
 {
 
-    public static GameState Instance {get; private set;}
+    public static GameState Instance
+    {
+        get;
+        private set;
+    }
 
     public UnityEvent roomComplete;
     public const int MaxRuntime = 3600;
-
+    // This is one hour, in seconds. Change to change the max time.
 
     [SerializeField]
     public float totalRunTime = -1;
@@ -27,15 +31,13 @@ public class GameState : MonoBehaviourPun
     [SerializeField]
     public static int puzzleCount = 2;
 
-    public List<Puzzle> AllPuzzles = new List<Puzzle>
-    {
-        new Puzzle("Cafeteria"),
-        new Puzzle("Library")
-    };
+    public List<Puzzle> AllPuzzles = new List<Puzzle> {
+    new Puzzle("Cafeteria"),
+    new Puzzle("Library")
+  };
 
     String teamName;
     bool[] finishedPuzzles;
-
 
     public GameObject EscapeObject;
     public GameObject LettersParent;
@@ -61,14 +63,14 @@ public class GameState : MonoBehaviourPun
 
     public Puzzle GetPuzzle(string room)
     {
-        for(int i = 0; i < AllPuzzles.Count; i++){
-            if(AllPuzzles[i] == null)
-                continue;
-            if(room == AllPuzzles[i].room)
+        for (int i = 0; i < AllPuzzles.Count; i++)
+        {
+            if (AllPuzzles[i] == null) continue;
+            if (room == AllPuzzles[i].room)
             {
                 AllPuzzles[i].SetPuzzleID(i);
                 return AllPuzzles[i];
-            }   
+            }
 
         }
         Debug.LogWarning("No Puzzle with name " + room + " found.");
@@ -76,31 +78,27 @@ public class GameState : MonoBehaviourPun
 
     }
 
-
-    
-
     [PunRPC]
     public void AwakenLetters(List<string> letters)
     {
-        for(int i = 0; i < letters.Count; i++)
+        for (int i = 0; i < letters.Count; i++)
         {
-        if(allLetters == null || allLetters.Count == 0)
-        {
-            allLetters = LettersParent.GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        }
-
-
-        Debug.Log("attempting activation of letter " + letters[i] +", from a list of size" + allLetters.Count);
-        
-        for(int s = 0; s < allLetters.Count; s++)
-        {
-            if(allLetters[s].gameObject.name.ToLower().Contains(letters[i].ToLower()))
+            if (allLetters == null || allLetters.Count == 0)
             {
-                allLetters[s].enabled = true;
+                allLetters = LettersParent.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+            }
+
+            Debug.Log("attempting activation of letter " + letters[i] + ", from a list of size" + allLetters.Count);
+
+            for (int s = 0; s < allLetters.Count; s++)
+            {
+                if (allLetters[s].gameObject.name.ToLower().Contains(letters[i].ToLower()))
+                {
+                    allLetters[s].enabled = true;
+                }
             }
         }
-        }
-        
+
     }
 
     [PunRPC]
@@ -108,26 +106,24 @@ public class GameState : MonoBehaviourPun
     {
         Debug.Log("Completed puzzle: " + ActivePuzzle.room + " with a time of " + ActivePuzzle.completionTime);
         this.ActivePuzzle.completed = true;
-        
 
         roomComplete.Invoke();
         finishedPuzzles[ActivePuzzle.GetPuzzleID()] = true;
-        for(int i = 0; i < ActivePuzzle.AnswerLetter.Length; i++)
+        for (int i = 0; i < ActivePuzzle.AnswerLetter.Length; i++)
         {
             activeLetters.Add(ActivePuzzle.AnswerLetter[i].ToString());
         }
         //activeLetters.Add(ActivePuzzle.AnswerLetter);
         AwakenLetters(activeLetters);
-        
+
         ActivePuzzle = null;
         bool Incomplete = false;
-        for(int i = 0; i < finishedPuzzles.Length; i++)
+        for (int i = 0; i < finishedPuzzles.Length; i++)
         {
-            if(finishedPuzzles[i] == false)
-                Incomplete = true;
+            if (finishedPuzzles[i] == false) Incomplete = true;
         }
 
-        if(!Incomplete)
+        if (!Incomplete)
         {
             isRunning = false;
             Debug.Log("TIME STOP! ESCAPE ROOM COMPLETED AT " + totalRunTime + " FRAMES");
@@ -162,34 +158,33 @@ public class GameState : MonoBehaviourPun
 
     public void CompletePuzzle()
     {
-        if(OfflineMode)
+        if (OfflineMode)
         {
             RPCCompletePuzzle();
         }
         else
         {
-                photonView.RPC("RPCCompletePuzzle", RpcTarget.All);
-        }        
+            photonView.RPC("RPCCompletePuzzle", RpcTarget.All);
+        }
     }
 
     public void SetPuzzle(Puzzle roomPuzzle)
     {
         ActivePuzzle = roomPuzzle;
-        if(ActivePuzzle.completed)
+        if (ActivePuzzle.completed)
         {
             ActivePuzzle = null;
             return;
         }
-        for(int i = 0; i < AllPuzzles.Count; i++)
+        for (int i = 0; i < AllPuzzles.Count; i++)
         {
-            if(AllPuzzles[i] == null)
+            if (AllPuzzles[i] == null)
             {
                 Debug.Log("Null puzzle chilling at " + i);
                 continue;
             }
 
-            if(AllPuzzles[i].room == ActivePuzzle.room)
-                return;
+            if (AllPuzzles[i].room == ActivePuzzle.room) return;
         }
 
         AllPuzzles.Add(ActivePuzzle);
@@ -197,26 +192,26 @@ public class GameState : MonoBehaviourPun
 
     IEnumerator LoadPuzzle()
     {
-        if(ActivePuzzle == null || ActivePuzzle.loaded == false)
+        if (ActivePuzzle == null || ActivePuzzle.loaded == false)
         {
-            
-            yield return new WaitForFixedUpdate();
+
+            yield
+            return new WaitForFixedUpdate();
         }
 
         StartPuzzle();
     }
 
-
     //The door object will manually call this when it is finished loading.
     // TODO: THIS IS CURRENTLY DONE IN PUZZLE BASE OBJECT.
     public void StartPuzzle()
     {
-        
+
         Debug.Log("sssstarting puzzzle?");
-        if(ActivePuzzle == null || ActivePuzzle.loaded == false)
+        if (ActivePuzzle == null || ActivePuzzle.loaded == false)
         {
             Debug.Log("puzzle not real");
-            
+
             StartCoroutine(LoadPuzzle());
             return;
         }
@@ -231,14 +226,14 @@ public class GameState : MonoBehaviourPun
     //TODO: May need slight refactor based on monitor board usage.
     public List<bool> AllHintsTaken()
     {
-        List<bool>boolHints = new List<bool>();
-        for(int i = 0; i < AllPuzzles.Count; i++)
+        List<bool> boolHints = new List<bool>();
+        for (int i = 0; i < AllPuzzles.Count; i++)
         {
-            for(int j = 0; j <AllPuzzles[i].puzzleSteps.Length; j++)
+            for (int j = 0; j < AllPuzzles[i].puzzleSteps.Length; j++)
             {
-                for(int k = 0; k < AllPuzzles[i].puzzleSteps[j].hints.Length; k++)
+                for (int k = 0; k < AllPuzzles[i].puzzleSteps[j].hints.Length; k++)
                 {
-                    if(AllPuzzles[i].puzzleSteps[j].hints[k].hintTaken)
+                    if (AllPuzzles[i].puzzleSteps[j].hints[k].hintTaken)
                     {
                         boolHints.Add(true);
                     }
@@ -258,7 +253,7 @@ public class GameState : MonoBehaviourPun
         this.RoomsDisplay = references.RoomsDisplay;
         this.HintPrefab = references.HintPrefab;
         this.HintParent = references.HintParent;
-        if(AllHintIcons != null && AllHintIcons.Count > 0)
+        if (AllHintIcons != null && AllHintIcons.Count > 0)
         {
             AllHintIcons.Clear();
         }
@@ -274,18 +269,18 @@ public class GameState : MonoBehaviourPun
         Destroy(references.gameObject);
     }
 
-
-    void Awake() {
+    void Awake()
+    {
         if (Instance != null && Instance != this)
         {
-            if(this.HintParent != null)
+            if (this.HintParent != null)
             {
                 GameObject[] kids = this.HintParent.GetComponentsInChildren<GameObject>();
                 Debug.Log(kids.Length + " hints on the gamestate screen to transfer");
-                for(int i = 0; i < kids.Length; i++)
+                for (int i = 0; i < kids.Length; i++)
                 {
                     kids[i].transform.SetParent(GameState.Instance.HintParent.transform);
-                    kids[i].transform.localPosition = new Vector3(180,-25.8f,980.5717f);
+                    kids[i].transform.localPosition = new Vector3(180, -25.8f, 980.5717f);
                 }
                 //this.HintParent.transform.SetParent(GameState.Instance.TimeDisplay.transform.parent);
             }
@@ -298,7 +293,7 @@ public class GameState : MonoBehaviourPun
             GameObject.Find("EscapeGameManager").GetComponent<EscapeGameManager>().destroyOnLeave.Add(gameObject);
             DontDestroyOnLoad(this);
             Instance = this;
-            if(totalRunTime < 0)
+            if (totalRunTime < 0)
             {
                 totalRunTime = 0;
             }
@@ -311,15 +306,15 @@ public class GameState : MonoBehaviourPun
     void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ActivePuzzle = null;
-        if(AllHintIcons != null && AllHintIcons.Count > 0)
+        if (AllHintIcons != null && AllHintIcons.Count > 0)
         {
-            for(int i = 0; i < AllHintIcons.Count; i++)
+            for (int i = 0; i < AllHintIcons.Count; i++)
             {
                 Destroy(AllHintIcons[i]);
             }
             AllHintIcons.Clear();
         }
-        if(SceneManager.GetActiveScene().name == "CafeteriaPuzzles" || SceneManager.GetActiveScene().name == "LibraryPuzzles")
+        if (SceneManager.GetActiveScene().name == "CafeteriaPuzzles" || SceneManager.GetActiveScene().name == "LibraryPuzzles")
         {
             HintsTakenText.text = "Hints Taken:";
             BeginEscape();
@@ -333,16 +328,19 @@ public class GameState : MonoBehaviourPun
         //StartPuzzle();
     }
 
-    public Dictionary<string, string> HintsTakenToString()
+    public Dictionary<string,
+    string> HintsTakenToString()
     {
-        Dictionary<string, string> verboseHints = new Dictionary<string, string>();
-        for(int i = 0; i < AllPuzzles.Count; i++)
+        Dictionary<string,
+        string> verboseHints = new Dictionary<string,
+        string>();
+        for (int i = 0; i < AllPuzzles.Count; i++)
         {
-            for(int j = 0; j <AllPuzzles[i].puzzleSteps.Length; j++)
+            for (int j = 0; j < AllPuzzles[i].puzzleSteps.Length; j++)
             {
-                for(int k = 0; k < AllPuzzles[i].puzzleSteps[j].hints.Length; k++)
+                for (int k = 0; k < AllPuzzles[i].puzzleSteps[j].hints.Length; k++)
                 {
-                    if(AllPuzzles[i].puzzleSteps[j].hints[k].hintTaken)
+                    if (AllPuzzles[i].puzzleSteps[j].hints[k].hintTaken)
                     {
                         verboseHints.Add(AllPuzzles[i].puzzleSteps[j].question, AllPuzzles[i].puzzleSteps[j].hints[k].hintString);
                     }
@@ -356,12 +354,10 @@ public class GameState : MonoBehaviourPun
     //TODO: Determine how this is going to be dynamic. Prefab instances? Direct reference?
     void LoadPuzzles()
     {
-        if(AllPuzzles == null)
-            AllPuzzles = new List<Puzzle>(puzzleCount);
-        for(int i = 0; i < puzzleCount; i++)
+        if (AllPuzzles == null) AllPuzzles = new List<Puzzle>(puzzleCount);
+        for (int i = 0; i < puzzleCount; i++)
         {
-            if(AllPuzzles[i] == null)
-                AllPuzzles[i] = new Puzzle("DEFAULT");
+            if (AllPuzzles[i] == null) AllPuzzles[i] = new Puzzle("DEFAULT");
             AllPuzzles[i].SetPuzzleID(i);
         }
 
@@ -376,15 +372,15 @@ public class GameState : MonoBehaviourPun
             GameState.Instance.SetGameStateData(this);
         }
         roomComplete = new UnityEvent();
-        if(!initLoaded)
+        if (!initLoaded)
         {
-        finishedPuzzles = new bool[puzzleCount];
-        LoadPuzzles();
-        for(int i = 0; i < puzzleCount; i++)
-        {
-            finishedPuzzles[i] = false;
-        }
-        initLoaded = true;
+            finishedPuzzles = new bool[puzzleCount];
+            LoadPuzzles();
+            for (int i = 0; i < puzzleCount; i++)
+            {
+                finishedPuzzles[i] = false;
+            }
+            initLoaded = true;
         }
 
         allLetters = LettersParent.GetComponentsInChildren<TextMeshProUGUI>().ToList();
@@ -395,9 +391,9 @@ public class GameState : MonoBehaviourPun
 
     void BeginEscape()
     {
-        if(AllHintIcons != null && AllHintIcons.Count > 0)
+        if (AllHintIcons != null && AllHintIcons.Count > 0)
         {
-            for(int i = 0; i < AllHintIcons.Count; i++)
+            for (int i = 0; i < AllHintIcons.Count; i++)
             {
                 Destroy(AllHintIcons[i]);
             }
@@ -415,91 +411,79 @@ public class GameState : MonoBehaviourPun
     {
         Debug.Log("updating hint visuals");
         int hintcount = 0;
-        if(ActivePuzzle != null && ActivePuzzle.loaded == true)
-            {
-        List<Hint> allHints = new List<Hint>();
-        for(int i = 0; i < ActivePuzzle.puzzleSteps.Length; i++)
+        if (ActivePuzzle != null && ActivePuzzle.loaded == true)
         {
-            hintcount += ActivePuzzle.puzzleSteps[i].hints.Length;
-            allHints.AddRange(ActivePuzzle.puzzleSteps[i].hints);
-        }
-
-        if(AllHintIcons == null ||  AllHintIcons.Count == 0)
-        {
-            AllHintIcons = new List<GameObject>();
-            
-            Vector2 basePos = new Vector2(250, -310);
-
-            for(int i = 0; i < hintcount; i++)
+            List<Hint> allHints = new List<Hint>();
+            for (int i = 0; i < ActivePuzzle.puzzleSteps.Length; i++)
             {
-                GameObject newHintIcon =
-                GameObject.Instantiate(HintPrefab, basePos, Quaternion.identity, HintParent.transform);
-                AllHintIcons.Add(newHintIcon);
-                newHintIcon.gameObject.transform.localPosition = basePos;
-                basePos.x += 75;
-                if(basePos.x > 845)
+                hintcount += ActivePuzzle.puzzleSteps[i].hints.Length;
+                allHints.AddRange(ActivePuzzle.puzzleSteps[i].hints);
+            }
+
+            if (AllHintIcons == null || AllHintIcons.Count == 0)
+            {
+                AllHintIcons = new List<GameObject>();
+
+                Vector2 basePos = new Vector2(250, -310);
+
+                for (int i = 0; i < hintcount; i++)
                 {
-                    basePos.x = 250;
-                    basePos.y = -350;
+                    GameObject newHintIcon = GameObject.Instantiate(HintPrefab, basePos, Quaternion.identity, HintParent.transform);
+                    AllHintIcons.Add(newHintIcon);
+                    newHintIcon.gameObject.transform.localPosition = basePos;
+                    basePos.x += 75;
+                    if (basePos.x > 845)
+                    {
+                        basePos.x = 250;
+                        basePos.y = -350;
+                    }
+                }
+            }
+
+            Debug.Log("all hints count: " + allHints.Count);
+            HintsTakenText.text = "Hints Taken:";
+
+            for (int i = 0; i < allHints.Count; i++)
+            {
+                if (allHints[i] == null)
+                {
+                    continue;
+                }
+                if (allHints[i].hintTaken == true)
+                {
+                    AllHintIcons[i].GetComponent<Image>().color = Color.red;
+                    continue;
+                }
+
+                if (allHints[i].puzStep.stepNo != ActivePuzzle.currentPuzzleStep.stepNo)
+                {
+                    AllHintIcons[i].GetComponent<Image>().color = Color.gray;
+                }
+                else
+                {
+                    AllHintIcons[i].GetComponent<Image>().color = Color.white;
                 }
             }
         }
-
-        Debug.Log("all hints count: " + allHints.Count);
-            HintsTakenText.text = "Hints Taken:";
-
-
-        for(int i = 0; i < allHints.Count; i++)
+        else
         {
-            if(allHints[i] == null)
+            if (AllHintIcons != null && AllHintIcons.Count > 0)
             {
-                continue;
+                for (int i = 0; i < AllHintIcons.Count; i++)
+                {
+                    Destroy(AllHintIcons[i]);
+                }
+                AllHintIcons.Clear();
             }
-            if(allHints[i].hintTaken == true)
-            {
-                AllHintIcons[i].GetComponent<Image>().color = Color.red;
-                continue;
-            }
-
-            if(allHints[i].puzStep.stepNo != ActivePuzzle.currentPuzzleStep.stepNo)
-            {
-                AllHintIcons[i].GetComponent<Image>().color = Color.gray;
-            }
-            else
-            {
-                AllHintIcons[i].GetComponent<Image>().color = Color.white;
-            }
+            HintsTakenText.text = "";
         }
-            }
-            else
-            {
-                if(AllHintIcons != null && AllHintIcons.Count > 0)
-            {
-            for(int i = 0; i < AllHintIcons.Count; i++)
-            {
-                Destroy(AllHintIcons[i]);
-            }
-            AllHintIcons.Clear();
-            }
-                        HintsTakenText.text = "";
-            }
 
     }
 
     public GameObject FloatyHintPrefab;
 
-    
-
     public void ActivateHint()
     {
-        /*for(int i = 0; i < ActivePuzzle.currentPuzzleStep.hints.Length; i++)
-        {
-            if(ActivePuzzle.currentPuzzleStep.hints[i].hintTaken == false)
-            {
-                ActivePuzzle.currentPuzzleStep.hints[i].ActivateHint();
-            }
-        }*/
-
         UpdateHintVisuals();
     }
 
@@ -507,11 +491,10 @@ public class GameState : MonoBehaviourPun
     void UpdateRoomVisuals()
     {
         int completedCount = 0;
-        for(int i = 0; i < AllPuzzles.Count; i++)
+        for (int i = 0; i < AllPuzzles.Count; i++)
         {
-            if(AllPuzzles[i] == null)
-                continue;
-            if(finishedPuzzles[i] == true || AllPuzzles[i].completed)
+            if (AllPuzzles[i] == null) continue;
+            if (finishedPuzzles[i] == true || AllPuzzles[i].completed)
             {
                 completedCount++;
             }
@@ -536,28 +519,28 @@ public class GameState : MonoBehaviourPun
     {
         TimePenaltyHelper(penalty);
         /*
-        if(OfflineMode)
-        {
-            TimePenaltyHelper(penalty);
-        }
-        else
-        {
-            photonView.RPC("TimePenaltyHelper", RpcTarget.All, penalty);
-        }*/
+            if(OfflineMode)
+            {
+                TimePenaltyHelper(penalty);
+            }
+            else
+            {
+                photonView.RPC("TimePenaltyHelper", RpcTarget.All, penalty);
+            }*/
     }
-    
+
     //[PunRPC]
     public void TimePenaltyHelper(int penalty)
     {
         totalRunTime += penalty;
         Debug.Log("TIME PENALTY OF " + penalty + ", NEW TIME IS " + totalRunTime);
         UpdateTimeVisuals();
-            UpdateHintVisuals();
-            if(ActivePuzzle != null)
-            {
-                ActivePuzzle.runningTime += penalty;
-                ActivePuzzle.currentPuzzleStep.runningTime += penalty;
-            }
+        UpdateHintVisuals();
+        if (ActivePuzzle != null)
+        {
+            ActivePuzzle.runningTime += penalty;
+            ActivePuzzle.currentPuzzleStep.runningTime += penalty;
+        }
     }
 
     // Update is called once per frame
@@ -571,13 +554,13 @@ public class GameState : MonoBehaviourPun
 
         if (isRunning)
         {
-            if(ActivePuzzle.completed)
+            if (ActivePuzzle.completed)
             {
                 isRunning = false;
             }
             totalRunTime += Time.deltaTime;
             UpdateTimeVisuals();
-            if(ActivePuzzle != null && ActivePuzzle.loaded == true)
+            if (ActivePuzzle != null && ActivePuzzle.loaded == true)
             {
                 ActivePuzzle.runningTime += Time.deltaTime;
                 ActivePuzzle.currentPuzzleStep.runningTime += Time.deltaTime;

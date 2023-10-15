@@ -28,10 +28,10 @@ public class Puzzle
     [SerializeField]
     public string AnswerLetter;
 
-
     public PuzzleBaseObject puzzleBaseReference;
 
-    public void Awake(){
+    public void Awake()
+    {
         loaded = false;
         gameState = GameState.Instance;
     }
@@ -40,13 +40,14 @@ public class Puzzle
         return this.idNo;
     }
 
-    public void SetPuzzleID(int number){
+    public void SetPuzzleID(int number)
+    {
         this.idNo = number;
     }
 
     public void CompletePuzzle()
     {
-        if(GameState.Instance.OfflineMode)
+        if (GameState.Instance.OfflineMode)
         {
             completionHelper();
         }
@@ -62,32 +63,31 @@ public class Puzzle
     {
         completionTime = runningTime;
         completed = true;
-        for(int i = 0; i < puzzleSteps.Length; i++)
+        for (int i = 0; i < puzzleSteps.Length; i++)
+        {
+            if (puzzleSteps[i].stepNo > 999)
             {
-                if(puzzleSteps[i].stepNo > 999)
-                {
-                    currentPuzzleStep = puzzleSteps[i];
-                    currentPuzzleStep.activate();
-                    currentPuzzleStep.stepCompleted = true;
-                }
+                currentPuzzleStep = puzzleSteps[i];
+                currentPuzzleStep.activate();
+                currentPuzzleStep.stepCompleted = true;
             }
+        }
     }
 
     public void nextStep()
     {
-        if (completed)
-            return;
+        if (completed) return;
 
         if (puzzleStepNum == puzzleSteps.Length)
         {
             // will set completed to true
             CompletePuzzle();
-            
+
         }
-        else 
+        else
         {
             //For the initial puzzle load, extra things may happen here.
-            if(puzzleStepNum == -1)
+            if (puzzleStepNum == -1)
             {
                 Debug.Log("Loading in puzzle.");
             }
@@ -98,21 +98,17 @@ public class Puzzle
                 currentPuzzleStep.deactivate();
             }
 
-
-
             puzzleStepNum++;
             Debug.Log("moving to step " + puzzleStepNum + " of " + puzzleSteps.Length);
             currentPuzzleStep = puzzleSteps[puzzleStepNum];
             currentPuzzleStep.activate();
-            if(currentPuzzleStep.stepNo > 999)
+            if (currentPuzzleStep.stepNo > 999)
             {
-               CompletePuzzle();
+                CompletePuzzle();
             }
             gameState.UpdateHintVisuals();
             Debug.Log("Moving onto step " + puzzleStepNum);
         }
-
-
 
     }
 

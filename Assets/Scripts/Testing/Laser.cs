@@ -20,11 +20,8 @@ public class Laser : MonoBehaviour
         if (Physics.Raycast(gameObject.transform.position, transform.TransformDirection(Vector3.forward), out hit))
         {
             Debug.Log("Hit");
-            if (hit.collider != null)
-                lr.SetPosition(1, hit.point);
+            if (hit.collider != null) lr.SetPosition(1, hit.point);
         }
-
-
 
     }
 }

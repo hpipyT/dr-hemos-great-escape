@@ -17,7 +17,7 @@ public class DBControl : MonoBehaviour
 
         // In own PHP scripts, change PDO to mysqli_init() for convention
         // Unity.CS method OK
-            // add formatting to output
+        // add formatting to output
 
         // Convention:
         // https://github.com/benigmatic/php-mysql-app/blob/main/index.php

@@ -40,7 +40,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             CreateRoom();
         }
 
-
         if (joinUnityTestRoom)
         {
             joinUnityTestRoom = false;
@@ -59,10 +58,10 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         student = GameObject.Find("PlayerData").GetComponent<StudentInfo>();
     }
 
-
     IEnumerator setupUI()
     {
-        yield return new WaitForSecondsRealtime(1);
+        yield
+        return new WaitForSecondsRealtime(1);
 
         UIBuilder.instance.AddLabel("Enter new team name:");
         UIBuilder.instance.AddTextField("");
@@ -102,7 +101,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     IEnumerator AttemptingJoinRoom()
     {
-        yield return new WaitForSecondsRealtime(2.0f);
+        yield
+        return new WaitForSecondsRealtime(2.0f);
 
         if (!roomJoined)
         {
@@ -114,9 +114,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         {
             //Debug.Log("Attempting to join room");
 
-
         }
-        
+
     }
 
     public override void OnJoinedRoom()
@@ -128,23 +127,19 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         // set Student's GAMEid
         student.SetGAMEid(GAMEid);
 
-
-
-        
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.LoadLevel("LobbyScene");
         }
         else
         {
-            
+
         }
     }
 
     public void CreateRoom()
     {
-        if (roomCreated)
-            return;
+        if (roomCreated) return;
 
         roomCreated = true;
 
@@ -166,7 +161,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {
@@ -186,7 +182,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         }
     }
 
-
     // TODO: check for bugz
     IEnumerator AddPlayerToAttempt()
     {
@@ -195,7 +190,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         // TODO: get player count
         int playerCount = PhotonNetwork.CountOfPlayers;
         Debug.Log("Database: # of Players in the scene at AddPlayerToAttempt:" + playerCount);
-
 
         // Host on own will be SID[1]
         // subsequent joins are SID[playerCount]
@@ -214,7 +208,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         string url = "https://hemo-cardiac.azurewebsites.net/hemo-update-attempt.php";
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {
@@ -228,8 +223,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             }
         }
 
-
-        yield return null;
+        yield
+        return null;
     }
 
     IEnumerator RemovePlayerFromAttempt(string sid, string aid)
@@ -244,7 +239,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         string url = "https://hemo-cardiac.azurewebsites.net/hemo-remove-player.php";
         using (var send = UnityWebRequest.Post(url, form))
         {
-            yield return send.SendWebRequest();
+            yield
+            return send.SendWebRequest();
 
             if (send.result != UnityWebRequest.Result.Success)
             {
@@ -258,8 +254,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             }
         }
 
-
-        yield return null;
+        yield
+        return null;
     }
 
 }

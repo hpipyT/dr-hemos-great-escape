@@ -27,7 +27,6 @@ public class PhotonOwnershipGrabber : MonoBehaviourPun
                 return;
             }
 
-
             if (other.GetComponent<SyncedObject>().canTransfer)
             {
                 other.GetComponent<PhotonView>().RequestOwnership();
@@ -38,7 +37,6 @@ public class PhotonOwnershipGrabber : MonoBehaviourPun
 
     private void OnTriggerExit(Collider other)
     {
-        if (other == heldObject)
-            heldObject.GetComponent<SyncedObject>().canTransfer = true;
+        if (other == heldObject) heldObject.GetComponent<SyncedObject>().canTransfer = true;
     }
 }
